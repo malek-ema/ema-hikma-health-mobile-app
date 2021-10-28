@@ -8,6 +8,7 @@ import { EventTypes } from "../enums/EventTypes";
 import { MedicineDisplay } from "./Medicine";
 import { MedicalHistoryDisplay } from "./MedicalHistory";
 import { ExaminationDisplay } from "./Examination";
+import { DentalTreatmentDisplay } from "./DentalTreatment";
 
 const SnapshotList = (props) => {
     const language = props.navigation.getParam('language', 'en');
@@ -57,6 +58,10 @@ const SnapshotList = (props) => {
             case EventTypes.Complaint:
                 eventTypeText = LocalizedStrings[language].complaint
                 display = <Text>{metadataObj}</Text>
+                break
+            case EventTypes.DentalTreatmentFull:
+                eventTypeText = LocalizedStrings[language].dentalTreatment
+                display = DentalTreatmentDisplay(metadataObj, language)
                 break
             default:
                 eventTypeText = item.event_type

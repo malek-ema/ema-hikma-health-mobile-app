@@ -6,7 +6,8 @@ import styles from './Style';
 import { EventTypes } from '../enums/EventTypes';
 import LinearGradient from 'react-native-linear-gradient';
 import { database } from "../storage/Database";
-import { uuid } from "uuidv4";
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid';
 import { LocalizedStrings } from '../enums/LocalizedStrings';
 import DatePicker from 'react-native-datepicker';
 import moment from 'moment';
@@ -158,7 +159,7 @@ const NewVisit = (props) => {
       </View>
 
       <View style={styles.gridContainer}>
-        <TouchableOpacity style={styles.actionButton} onPress={() => openTextEvent(EventTypes.DentalTreatment)}>
+        <TouchableOpacity style={styles.actionButton} onPress={() => props.navigation.navigate('DentalTreatmentFull', { patientId: patient.id, visitId, userName, language })}>
           <View style={styles.actionIcon}>
             <Image source={require('../images/dental_treatment.png')} style={{ width: 50, height: 50 }} />
           </View>

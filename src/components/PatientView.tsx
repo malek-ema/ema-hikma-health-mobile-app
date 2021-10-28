@@ -3,7 +3,8 @@ import { View, Text, Image, TextInput, TouchableOpacity, ImageBackground, Picker
 import { ImageSync } from '../storage/ImageSync';
 import { database } from '../storage/Database';
 import styles from './Style';
-import { uuid } from "uuidv4";
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid';
 import { EventTypes } from "../enums/EventTypes";
 import { iconHash } from '../services/hash'
 import { icons } from '../enums/Icons';
@@ -192,6 +193,14 @@ const PatientView = (props) => {
               onPress={() => props.navigation.navigate('SnapshotList', { eventType: EventTypes.Medicine, language: language, patient: patient })}>
               <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
                 <Text style={{ fontSize: 15 }}>{LocalizedStrings[language].medicine}</Text>
+                <Text style={{ fontSize: 15 }}>></Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.profileButton, { height: 40, marginVertical: 1 }]}
+              onPress={() => props.navigation.navigate('SnapshotList', { eventType: EventTypes.DentalTreatmentFull, language: language, patient: patient })}>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+                <Text style={{ fontSize: 15 }}>{LocalizedStrings[language].dentalTreatment}</Text>
                 <Text style={{ fontSize: 15 }}>></Text>
               </View>
             </TouchableOpacity>

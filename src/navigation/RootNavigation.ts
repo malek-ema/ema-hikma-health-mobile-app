@@ -24,6 +24,7 @@ import EditMedicalHistory from '../components/EditMedicalHistory';
 import EditPhysiotherapy from '../components/EditPhysiotherapy';
 import EditMedicine from '../components/EditMedicine';
 import SnapshotList from '../components/SnapshotList';
+import DentalTreatment from '../components/DentalTreatment';
 
 const rootNavigator = createStackNavigator(
   {
@@ -180,7 +181,14 @@ const rootNavigator = createStackNavigator(
         title: `SnapshotList`,
         header: null
       })
-    }
+    },
+    DentalTreatmentFull: {
+      screen: DentalTreatment,
+      navigationOptions: () => ({
+        title: `Dental Treatment Full`,
+        header: null
+      })
+    },
   },
   {
     initialRouteName: 'Home'

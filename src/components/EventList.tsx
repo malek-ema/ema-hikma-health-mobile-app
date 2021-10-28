@@ -12,6 +12,7 @@ import { ExaminationDisplay } from "./Examination";
 import { MedicineDisplay } from "./Medicine";
 import { MedicalHistoryDisplay } from "./MedicalHistory";
 import { PhysiotherapyDisplay } from "./Physiotherapy";
+import DentalTreatment, { DentalTreatmentDisplay } from "./DentalTreatment";
 
 const EventList = (props) => {
   const visit = props.navigation.getParam('visit');
@@ -94,6 +95,10 @@ const EventList = (props) => {
       case EventTypes.Physiotherapy:
         eventTypeText = LocalizedStrings[language].physiotherapy
         display = PhysiotherapyDisplay(metadataObj, language)
+        break
+      case EventTypes.DentalTreatmentFull:
+        eventTypeText = LocalizedStrings[language].dentalTreatment
+        display = DentalTreatmentDisplay(metadataObj, language)
         break
       default:
         eventTypeText = item.event_type
