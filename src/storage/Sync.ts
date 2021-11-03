@@ -1,5 +1,5 @@
 import { Platform, Alert } from "react-native";
-import RNFS from "react-native-fs";
+import RNFS, { stat } from "react-native-fs";
 import RNFetchBlob, { FetchBlobResponse } from "rn-fetch-blob";
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import { DATABASE } from "./Constants";
@@ -63,11 +63,13 @@ export class DatabaseSync {
     console.log(
       `Syncing DB!`
     );
+    const statResult =  await stat(localFilePath)
     return RNFetchBlob.fetch(
       "POST",
       `${instanceUrl}/api/sync`,
       {
         "Content-Type": "multipart/form-data",
+        "Content-Length": `${statResult.size}`
       }, [
         {
           name: 'email', data: email

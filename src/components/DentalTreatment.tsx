@@ -18,6 +18,7 @@ export const extraOralExaminationPicker = (value, action, language) => {
             onValueChange={value => action(value)}
             style={[styles.picker, { width: 180 }]}
         >
+            <Picker.Item value='' label={LocalizedStrings[language].type} />
             <Picker.Item value={LocalizedStrings[language].lymphnodes} label={LocalizedStrings[language].lymphnodes} />
             <Picker.Item value={LocalizedStrings[language].tmj} label={LocalizedStrings[language].tmj} />
             <Picker.Item value={LocalizedStrings[language].swelling} label={LocalizedStrings[language].swelling} />
@@ -31,7 +32,7 @@ export const DentalTreatmentDisplay = (metadataObj, language) => {
   return (
     <View>
       <Text>{LocalizedStrings[language].provider}: {metadataObj.doctor} </Text>
-      <Text>{LocalizedStrings[language].previousTreatment}: {formatTextDisplay(metadataObj.previousTreatment, metadataObj.previousTreatmentText, language)} </Text>
+      <Text>{LocalizedStrings[language].previousDentalTreatment}: {formatTextDisplay(metadataObj.previousTreatment, metadataObj.previousTreatmentText, language)} </Text>
       <Text>{LocalizedStrings[language].complaint}: {metadataObj.complaint} </Text>
       <Text>{LocalizedStrings[language].historyOfComplaint}: {metadataObj.historyOfComplaint} </Text>
       <Text>{LocalizedStrings[language].extraOralExamination}: {metadataObj.extraOralExamination} </Text>
