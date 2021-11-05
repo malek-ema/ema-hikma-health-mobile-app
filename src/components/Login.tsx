@@ -19,7 +19,8 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const [instanceList, setInstanceList] = useState([]);
   // const [selectedInstance, setSelectedInstance] = useState();
-  const [selectedInstance, setSelectedInstance] = useState({ name: 'local', url: 'http://10.0.2.2:8080' });
+  // const [selectedInstance, setSelectedInstance] = useState({ name: 'local', url: 'http://10.0.2.2:8080' });
+  const [selectedInstance, setSelectedInstance] = useState({ name: 'prod', url: 'https://api.endlessmedicaladvantage.org' });
   const [showInstanceDropdown, setShowInstanceDropdown] = useState(false);
   const [loginFailed, setLoginFailed] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');

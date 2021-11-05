@@ -125,7 +125,7 @@ const DentalTreatment = (props) => {
         </View>
 
         <View style={{ flexDirection: 'row', justifyContent: 'center', alignSelf: 'stretch', }}>
-          <Text style={[styles.text, { fontSize: 16, fontWeight: 'bold' }]}>{LocalizedStrings[language].DentalTreatment}</Text>
+          <Text style={[styles.text, { fontSize: 16, fontWeight: 'bold' }]}>{LocalizedStrings[language].dentalTreatment}</Text>
         </View>
 
         <View style={styles.responseRow}>
