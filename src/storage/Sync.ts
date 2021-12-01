@@ -4,7 +4,7 @@ import RNFetchBlob, { FetchBlobResponse } from "rn-fetch-blob";
 import { zip, unzip, unzipAssets, subscribe } from 'react-native-zip-archive'
 import { DATABASE } from "./Constants";
 import { database } from "./Database";
-import { SyncResponse } from "../types/syncResponse";
+import { SyncResponse } from "../types/SyncResponse";
 import { LocalizedStrings } from "../enums/LocalizedStrings";
 import NetInfo from "@react-native-community/netinfo"
 

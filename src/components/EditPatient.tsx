@@ -2,25 +2,16 @@ import React, { useState, useEffect } from 'react';
 import {
   View, Text, Image, TextInput, TouchableOpacity, Picker, TouchableWithoutFeedback, Button
 } from 'react-native';
-import { ImageSync } from '../storage/ImageSync'
 import { v4 as uuid } from 'uuid';
 import { database } from "../storage/Database";
 import styles from './Style';
 import LinearGradient from 'react-native-linear-gradient';
 import DatePicker from 'react-native-datepicker'
-import { RNCamera } from 'react-native-camera';
-import { useCamera } from 'react-native-camera-hooks';
 import { LocalizedStrings } from '../enums/LocalizedStrings';
 import { EventTypes } from '../enums/EventTypes';
 
 const EditPatient = (props) => {
-  const imageSync = new ImageSync();
   const [language, setLanguage] = useState(props.navigation.getParam('language', 'en'))
-
-  const [
-    { cameraRef, type, ratio, autoFocusPoint },
-    { takePicture, toggleFacing, touchToFocus, facesDetected, }
-  ] = useCamera()
   const patient = props.navigation.getParam('patient');
 
   const [givenNameText, setGivenNameText] = useState(!!props.navigation.state.params.patient.given_name ? props.navigation.state.params.patient.given_name.content[language] : '');
@@ -30,9 +21,7 @@ const EditPatient = (props) => {
   const [countryText, setCountryText] = useState(!!props.navigation.state.params.patient.country ? props.navigation.state.params.patient.country.content[language] : '');
   const [hometownText, setHometownText] = useState(!!props.navigation.state.params.patient.hometown ? props.navigation.state.params.patient.hometown.content[language] : '');
   const [phone, setPhone] = useState(props.navigation.state.params.patient.phone || '');
-  const [imageTimestamp, setImageTimestamp] = useState(props.navigation.state.params.patient.image_timestamp || '');
   const [camp, setCamp] = useState('');
-  const [cameraOpen, setCameraOpen] = useState(false);
   const today = new Date();
 
   const handleSaveCamp = (campName: string) => {
@@ -99,8 +88,7 @@ const EditPatient = (props) => {
       country: countryId,
       hometown: hometownId,
       phone: phone,
-      sex: male ? 'M' : 'F',
-      image_timestamp: imageTimestamp
+      sex: male ? 'M' : 'F'
     }).then((updatedPatient) => props.navigation.navigate('PatientView', {
       patient: updatedPatient,
       language: language
@@ -121,18 +109,6 @@ const EditPatient = (props) => {
       }
     })
   }, [])
-
-  const capture = async () => {
-    try {
-      let d = today.getTime().toString();
-      setImageTimestamp(d)
-      const data = await takePicture()
-      await imageSync.saveImage(patient.id, data.uri, d)
-      setCameraOpen(false)
-    } catch (error) {
-      console.warn(error);
-    }
-  };
 
   const LanguageToggle = () => {
     return (
@@ -174,41 +150,9 @@ const EditPatient = (props) => {
     );
   }
 
-  return cameraOpen ? (
-    <View style={{ flex: 1 }}>
-      <RNCamera
-        ref={cameraRef}
-        autoFocusPointOfInterest={autoFocusPoint.normalized}
-        type="back"
-        autoFocus="on"
-        ratio={ratio}
-        style={{ flex: 1 }}
-        onFacesDetected={facesDetected}
-        captureAudio={false}
-      />
-      <TouchableWithoutFeedback
-        style={{
-          flex: 1,
-        }}
-        onPress={touchToFocus}
-      ><View /></TouchableWithoutFeedback>
-      <TouchableOpacity
-        style={{ position: 'absolute', bottom: 20, right: '50%', transform: [{ translateX: 20 }] }}
-        onPress={capture}
-      ><Image source={require('../images/shutter.png')} style={{ width: 40, height: 40 }} />
-      </TouchableOpacity>
-    </View>
-  ) : (
+  return (
       <LinearGradient colors={['#31BBF3', '#4D7FFF']} style={styles.container}>
         {LanguageToggle()}
-        <View style={styles.inputRow}>
-          {!!imageTimestamp ?
-            <Image source={{ uri: `${imageSync.imgURI(patient.id)}/${imageTimestamp}.jpg` }} style={{ width: 100, height: 100, justifyContent: 'center', marginRight: 10 }}>
-            </Image> : null}
-          <TouchableOpacity onPress={() => setCameraOpen(true)}>
-            <Image source={require('../images/camera.png')} style={{ width: 40, height: 40 }} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.inputRow}>
           <TextInput
             style={styles.inputs}

@@ -3,18 +3,14 @@ import {
   View, Text, Image, TextInput, TouchableOpacity, TouchableWithoutFeedback, Picker, Button
 } from 'react-native';
 import { database } from "../storage/Database";
-import { ImageSync } from '../storage/ImageSync'
 import { v4 as uuid } from 'uuid';
 import styles from './Style';
 import DatePicker from 'react-native-datepicker'
 import LinearGradient from 'react-native-linear-gradient';
 import { LocalizedStrings } from '../enums/LocalizedStrings';
-import { RNCamera } from 'react-native-camera';
-import { useCamera } from 'react-native-camera-hooks';
 import { EventTypes } from '../enums/EventTypes';
 
 const NewPatient = (props) => {
-  const imageSync = new ImageSync();
   const [givenName, setGivenName] = useState('');
   const [surname, setSurname] = useState('');
   const [dob, setDob] = useState('');
@@ -22,16 +18,9 @@ const NewPatient = (props) => {
   const [country, setCountry] = useState('');
   const [hometown, setHometown] = useState('');
   const [phone, setPhone] = useState('');
-  const [imageTimestamp, setImageTimestamp] = useState('');
   const [language, setLanguage] = useState(props.navigation.getParam('language', 'en'))
   const [camp, setCamp] = useState('');
 
-  const [
-    { cameraRef, type, ratio, autoFocusPoint },
-    { takePicture, toggleFacing, touchToFocus, facesDetected, }
-  ] = useCamera()
-
-  const [cameraOpen, setCameraOpen] = useState(false);
   const today = new Date();
   const [patientId] = useState(uuid().replace(/-/g, ''));
 
@@ -59,15 +48,13 @@ const NewPatient = (props) => {
       country: countryId,
       hometown: hometownId,
       phone: phone,
-      sex: male ? 'M' : 'F',
-      image_timestamp: imageTimestamp
+      sex: male ? 'M' : 'F'
     }).then(() => {
       if (!!camp) {
         handleSaveCamp(camp)
       }
       props.navigation.navigate('PatientList', {
         reloadPatientsToggle: !props.navigation.state.params.reloadPatientsToggle,
-        imagesSynced: null,
         language: language
       })
     })
@@ -97,54 +84,9 @@ const NewPatient = (props) => {
     );
   }
 
-  const capture = async () => {
-    try {
-      let d = today.getTime().toString();
-      setImageTimestamp(d)
-      const data = await takePicture()
-      await imageSync.saveImage(patientId, data.uri, d)
-      setCameraOpen(false)
-    } catch (error) {
-      console.warn(error);
-    }
-  };
-
-  return cameraOpen ? (
-    <View style={{ flex: 1 }}>
-      <RNCamera
-        ref={cameraRef}
-        autoFocusPointOfInterest={autoFocusPoint.normalized}
-        type="back"
-        autoFocus="on"
-        ratio={ratio}
-        style={{ flex: 1 }}
-        onFacesDetected={facesDetected}
-        captureAudio={false}
-      />
-      <TouchableWithoutFeedback
-        style={{
-          flex: 1,
-        }}
-        onPress={touchToFocus}
-      ><View /></TouchableWithoutFeedback>
-
-      <TouchableOpacity
-        style={{ position: 'absolute', bottom: 20, right: '50%', transform: [{ translateX: 20 }] }}
-        onPress={capture}
-      ><Image source={require('../images/shutter.png')} style={{ width: 40, height: 40 }} />
-      </TouchableOpacity>
-    </View>
-  ) : (
+  return (
       <LinearGradient colors={['#31BBF3', '#4D7FFF']} style={styles.container}>
         {LanguageToggle()}
-        <View style={styles.inputRow}>
-          {!!imageTimestamp ?
-            <Image source={{ uri: `${imageSync.imgURI(patientId)}/${imageTimestamp}.jpg` }} style={{ width: 100, height: 100, justifyContent: 'center', marginRight: 10 }}>
-            </Image> : null}
-          <TouchableOpacity onPress={() => setCameraOpen(true)}>
-            <Image source={require('../images/camera.png')} style={{ width: 40, height: 40 }} />
-          </TouchableOpacity>
-        </View>
         <View style={styles.inputRow}>
           <TextInput
             style={styles.inputs}
