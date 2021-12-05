@@ -63,57 +63,59 @@ export class DatabaseSync {
     console.log(
       `Syncing DB!`
     );
-    const statResult =  await stat(localFilePath)
-    return RNFetchBlob.fetch(
-      "POST",
-      `${instanceUrl}/api/sync`,
-      {
-        "Content-Type": "multipart/form-data",
-        "Content-Length": `${statResult.size}`
-      }, [
+    const statResult = await stat(localFilePath)
+    return RNFetchBlob
+      .config({ timeout: 600000 })
+      .fetch(
+        "POST",
+        `${instanceUrl}/api/sync`,
         {
-          name: 'email', data: email
-        },
-        {
-          name: 'password', data: password,
-        },
-        {
-          name: 'db', filename: 'AppDatabase.db', data: RNFetchBlob.wrap(localFilePath)
-        }
-      ]
+          "Content-Type": "multipart/form-data",
+          "Content-Length": `${statResult.size}`
+        }, [
+          {
+            name: 'email', data: email
+          },
+          {
+            name: 'password', data: password,
+          },
+          {
+            name: 'db', filename: 'AppDatabase.db', data: RNFetchBlob.wrap(localFilePath)
+          }
+        ]
 
-      // RNFetchBlob.wrap(localFilePath)
-    ).then(fetchBlobResponse => {
-      console.log("Sync response: ", fetchBlobResponse);
-      if (
-        fetchBlobResponse.data &&
-        fetchBlobResponse.respInfo &&
-        fetchBlobResponse.respInfo.status === 200
-      ) {
-        console.log("Sync SUCCESS!");
-        Alert.alert(
-          LocalizedStrings[language].syncSuccess,
-          null,
-          [
-            {
-              text: 'OK',
-            }
-          ],
-        )
-        return fetchBlobResponse;
-        // return responseData;
-      } else {
-        Alert.alert(
-          LocalizedStrings[language].syncFailure,
-          LocalizedStrings[language].syncFailureSystem,
-          [
-            {
-              text: 'OK',
-            }
-          ],
-        )
-      }
-    });
+        // RNFetchBlob.wrap(localFilePath)
+      ).then(fetchBlobResponse => {
+        console.log("Sync response: ", fetchBlobResponse);
+        if (
+          fetchBlobResponse.data &&
+          fetchBlobResponse.respInfo &&
+          fetchBlobResponse.respInfo.status === 200
+        ) {
+          console.log("Sync SUCCESS!");
+          Alert.alert(
+            LocalizedStrings[language].syncSuccess,
+            null,
+            [
+              {
+                text: 'OK',
+              }
+            ],
+          )
+          return fetchBlobResponse;
+          // return responseData;
+        } else {
+          Alert.alert(
+            LocalizedStrings[language].syncFailure,
+            LocalizedStrings[language].syncFailureSystem,
+            [
+              {
+                text: 'OK',
+              }
+            ],
+          )
+        }
+      });
   }
 
   private getDatabaseName(): string {
